@@ -6,6 +6,8 @@ It is **[stateful](https://www.aihero.dev/ai-coding-dictionary/stateful)**. Ever
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:grill-with-docs`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/grill-with-docs`; the agent will not reach for it on its own.
 
 Reach for it at the start of a change, in a repo, when the plan is still fuzzy and the words for the thing are not settled yet. It is the single-session tool. Which grilling skill you want depends on what is in front of you:

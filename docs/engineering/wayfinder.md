@@ -6,6 +6,8 @@ It plans, it does not do. Every ticket holds a question whose resolution is a de
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:wayfinder`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/wayfinder`; the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) won't reach for it on its own.
 
 It is the heaviest, densest flow in the set, so the trigger is narrow: the effort has to be genuinely larger than one agent session can hold, and the route to the destination has to be foggy. The split is a clean one: `/grill-with-docs` for single-session planning, `/wayfinder` for multi-session planning.
@@ -55,6 +57,10 @@ Every ticket carries a `wayfinder:<type>` label, and is either **[HITL](https://
 Research is the only exception to *one ticket per session*.
 
 ## Common questions
+
+**Can the map's Notes start any skill in Codex?**
+
+No. This fork's Codex package checks each named skill's invocation policy. It can load model-invoked packaged siblings, but a user-only workflow waits for your explicit selection. External skills must already be installed and retain their own policy. Research delegation uses the session's available subagent tools; the plugin does not add them.
 
 **How is this different from `/grill-with-docs`? Which should I start with?**
 Session count, not project size. `/grill-with-docs` is single-session planning; wayfinder is multi-session planning. If you can hold the whole thing in one conversation, grilling is the cheaper and better tool, and wayfinder is genuinely slower and denser for that case. The community shorthand that has settled on it: wayfinder only makes sense if the work doesn't fit into a single session. This is by a distance the most-asked wayfinder question, and it keeps being asked because the descriptions do not tell you where your own task sits on that line. You have to judge the session count yourself.

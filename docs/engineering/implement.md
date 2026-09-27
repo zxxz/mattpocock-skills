@@ -6,6 +6,8 @@ It never reopens the plan. There is no interview, no clarifying round, no propos
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:implement`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/implement` yourself: the agent won't reach for it on its own. It ships with `disable-model-invocation: true`, so no other skill can call it either. Wherever [ask-matt](https://aihero.dev/skills-ask-matt) or [to-tickets](https://aihero.dev/skills-to-tickets) says "then `/implement` per ticket", that is an instruction to you, not something the agent will do unprompted.
 
 Where the work currently lives decides whether this is the right skill:
@@ -47,6 +49,10 @@ The idea the skill runs on is the **seam**: the public boundary you observe beha
 The word "pre-agreed" is doing real work, and it is also the skill's weakest joint. Nothing inside `implement` agrees the seams. `tdd` is the skill that asks, and it refuses to write a test at an unconfirmed seam. So in practice the agreement happens either upstream in the spec, or in the first exchange of the run. If it happens nowhere, the precondition never fires and the run quietly becomes "just write the code". Naming the seams in the spec is what stops that.
 
 ## Common questions
+
+**How does this fork's Codex plugin start TDD and review?**
+
+It reads the packaged `tdd/SKILL.md` and `code-review/SKILL.md` and follows their workflows. Both remain model-invoked; `implement` itself still requires your explicit selection. No Claude Skill tool is required, and a review still needs the session's subagent capability.
 
 **It finished, but my ticket is still open and the acceptance criteria are still unchecked.**
 

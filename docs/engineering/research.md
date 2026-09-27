@@ -6,6 +6,8 @@ It does not answer you in the conversation. The output is a file, written where 
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:research`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 Type `/research`, or the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) reaches for it automatically when a task turns into reading legwork.
 
 Reach for it when the next step is *finding something out* from outside the working directory (how a third-party API behaves, what a spec actually says, whether a version claim holds), and you'd rather not stall your own thread doing the reading. What you need decides which skill:
@@ -24,7 +26,7 @@ The line between `research` and `grill-with-docs` is the **shelf life of what co
 
 The defining move is that the reading runs as a **background agent**. You keep working; it goes off, follows each claim to its primary source, writes one Markdown file, and reports back. Research is legwork you delegate, not thinking you outsource: you get a document to grill, plan, or design against, and you still make the call.
 
-The delegation is unguarded, and the background agent can spawn a further background agent of its own. This is the skill's best-documented rough edge.
+This fork's generated Codex instructions tell an agent that is already the researcher to do the research itself. Only the caller delegates it, and the researcher returns the cited file path. If the session has no subagent tool, the agent reports that limitation before promising background work.
 
 Where the file lands is decided by the repo, not by the skill: it matches whatever convention already exists for notes, and if there is none it picks somewhere sensible and tells you where. It writes one file per run.
 
@@ -32,9 +34,9 @@ Where the file lands is decided by the repo, not by the skill: it matches whatev
 
 **It spawned a second research agent. Is that meant to happen?**
 
-No. This is an open bug, [issue #530](https://github.com/mattpocock/skills/issues/530). The skill tells its caller to spin up a background agent but does not restrict the agent type, so the agent it spawns is a `general-purpose` one that holds the `Agent` tool and the same instructions, and fires them again. One reporter measured a single research task costing roughly 450k [tokens](https://www.aihero.dev/ai-coding-dictionary/token) across three overlapping runs, with the duplicate finishing half an hour later entirely out of view. It reproduces outside Claude Code too; the same nesting was confirmed in Codex with GPT-5.6-sol. There is no shipped fix. Users have patched their own installed copy with a line telling an agent that is already a [subagent](https://www.aihero.dev/ai-coding-dictionary/subagent) to do the work itself, which helps but is instruction-level, not structural. Watch your background task list after invoking, and stop the duplicate.
+No. Recursive research delegation is documented in [issue #530](https://github.com/mattpocock/skills/issues/530). This fork's Codex adapter adds a direct instruction for a researcher to perform its task rather than delegate the same task again. This is an instruction-level guard, not a hard runtime depth limit. Check that one research question creates one background task and one cited result.
 
-The opposite failure exists as well: if your own global instructions forbid an agent from re-delegating work, the background agent will politely decline the task and the skill quietly does nothing.
+Global instructions and available tools still control whether delegation can happen. The generated skill must report a missing capability rather than silently claim the research ran.
 
 **Where should the file live, and should I commit it?**
 

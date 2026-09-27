@@ -6,6 +6,8 @@ What it buys is **portability**, not compression. That makes the skill narrower 
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:handoff`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/handoff`; the agent won't reach for it on its own. Pass a note about what the next session is for, and the document is written for it.
 
 Four situations are the whole trigger:
@@ -29,7 +31,7 @@ Three of the five options at a phase boundary preserve different things: `/compa
 
 ## What travels, and what doesn't
 
-The document carries the live thread (what's in flight, why, and what's next) plus a **suggested skills** section naming what the next agent should reach for. Secrets are redacted before it's written.
+The document carries the live thread (what's in flight, why, and what's next) plus a **suggested skills** section naming what the next agent should reach for. Secrets are redacted before it's written. In this fork's Codex package, user-only skills are suggestions for the human to select; the handoff cannot authorize the next agent to invoke them. It names skills rather than carrying machine-specific plugin cache paths.
 
 What it deliberately does not carry is anything already written down. Specs, plans, ADRs, issues, commits and diffs are referenced by path or URL, never copied. That keeps the file small, and it keeps the settled detail in one place instead of two that drift.
 

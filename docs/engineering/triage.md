@@ -8,6 +8,8 @@ The second thing that separates it from labelling by hand: it recommends and wai
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:triage`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/triage` and then describing what you want in plain language. The [agent](https://www.aihero.dev/ai-coding-dictionary/agent) won't reach for it on its own. "Show me anything that needs my attention", "let's look at #42", "move #42 to ready-for-agent".
 
 | What you have | Where to go |

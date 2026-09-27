@@ -1,0 +1,133 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: '23 4 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/engineering/**'
+      - 'skills/productivity/**'
+      - '.claude-plugin/plugin.json'
+      - '.codex-plugin/**'
+      - '.agents/plugins/marketplace.json'
+      - 'plugins/mattpocock-skills/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'LICENSE'
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'zxxz/mattpocock-skills' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require repository-scoped App credentials
+        env:
+          APP_CLIENT_ID: ${{ vars.CODEX_SYNC_APP_CLIENT_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.CODEX_SYNC_PRIVATE_KEY }}
+        run: |
+          if [[ -z "$APP_CLIENT_ID" || -z "$APP_PRIVATE_KEY" ]]; then
+            echo '::error::Set CODEX_SYNC_APP_CLIENT_ID and CODEX_SYNC_PRIVATE_KEY following .agents/codex-sync.md. An App token is required for unattended PR validation.'
+            exit 1
+          fi
+      - name: Create repository-scoped token
+        id: app
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.CODEX_SYNC_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CODEX_SYNC_PRIVATE_KEY }}
+          owner: zxxz
+          repositories: mattpocock-skills
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ steps.app.outputs.token }}
+          persist-credentials: false
+      - name: Fetch and merge upstream without rewriting fork history
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          gh auth setup-git
+          git config user.name 'skills-sync[bot]'
+          git config user.email 'skills-sync[bot]@users.noreply.github.com'
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          git remote add upstream https://github.com/mattpocock/skills.git
+          git fetch upstream main
+          bash scripts/sync-upstream.sh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Regenerate and validate the distribution
+        run: |
+          npm run generate:codex
+          npm run check-plugin-version
+          npm run check:codex
+          npm run test:codex
+          node --test scripts/sync-upstream.test.mjs
+          npx --yes @anthropic-ai/claude-code@2.1.246 plugin validate . --strict
+          npx --yes @anthropic-ai/claude-code@2.1.246 plugin validate .claude-plugin/plugin.json
+      - name: Commit generated changes and detect no-op
+        id: changes
+        run: |
+          git add -- plugins/mattpocock-skills
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: regenerate Codex plugin'
+          fi
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo '::error::Generation changed files outside the distribution; inspect this run before publishing.'
+            exit 1
+          fi
+          if [[ "$(git rev-list --count origin/main..HEAD)" -gt 0 ]]; then
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'No upstream or plugin changes.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Create or update the single sync PR and enable checked merge
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_REPO: zxxz/mattpocock-skills
+        run: |
+          protected=$(gh api graphql -f query='query { repository(owner: "zxxz", name: "mattpocock-skills") { autoMergeAllowed mergeCommitAllowed ref(qualifiedName: "refs/heads/main") { branchProtectionRule { requiresStatusChecks requiresStrictStatusChecks requiredStatusCheckContexts } } } }' --jq '.data.repository | .autoMergeAllowed and .mergeCommitAllowed and (.ref.branchProtectionRule | .requiresStatusChecks and .requiresStrictStatusChecks and (.requiredStatusCheckContexts | index("Validate plugin") != null))')
+          if [[ "$protected" != true ]]; then
+            echo '::error::Require the Validate plugin check on an up-to-date main branch, and enable auto-merge and merge commits. Follow .agents/codex-sync.md before retrying.'
+            exit 1
+          fi
+          git push origin HEAD:refs/heads/codex/sync-upstream
+          pr=$(gh pr list --head codex/sync-upstream --base main --state open --json number --jq '.[0].number // empty')
+          body="$RUNNER_TEMP/sync-pr.md"
+          cat > "$body" <<'EOF'
+          Merge upstream ancestry and regenerate the native Codex plugin from the promoted Claude allowlist. Fork changes are preserved. The generated package and invocation metadata are validated before publication.
+
+          GitHub auto-merge uses a merge commit after the required `Validate plugin` PR check succeeds. Merge conflicts or failed validation require a maintainer to repair this branch and rerun synchronization.
+          EOF
+          upstream_sha=$(git rev-parse upstream/main)
+          upstream_version=$(git show upstream/main:package.json | node -p 'JSON.parse(require("node:fs").readFileSync(0, "utf8")).version')
+          printf '\nUpstream source: [%s](https://github.com/mattpocock/skills/commit/%s), package version `%s`.\n' "$upstream_sha" "$upstream_sha" "$upstream_version" >> "$body"
+          if [[ -z "$pr" ]]; then
+            pr=$(gh pr create --head codex/sync-upstream --base main --title 'chore: sync upstream and Codex plugin' --body-file "$body")
+          else
+            gh pr edit "$pr" --title 'chore: sync upstream and Codex plugin' --body-file "$body"
+          fi
+          gh pr merge "$pr" --auto --merge --match-head-commit "$(git rev-parse HEAD)"
+          echo "Synchronization PR: $pr" >> "$GITHUB_STEP_SUMMARY"
+      - name: Explain required recovery
+        if: failure()
+        run: |
+          echo 'Sync stopped without changing main. Inspect the failing step; resolve conflicts on codex/sync-upstream or repair the App/settings per .agents/codex-sync.md, then use Run workflow.' >> "$GITHUB_STEP_SUMMARY"

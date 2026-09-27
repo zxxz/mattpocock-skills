@@ -24,3 +24,7 @@ This whole convention only holds when the named skill is **model-invoked**. A us
 ## Passive vs active domain work
 
 Merely _reading_ `CONTEXT.md` for vocabulary is a one-line prose pointer, not the `domain-modeling` skill. Only the active build/sharpen discipline (challenge terms, edge-case scenarios, write ADRs, update `CONTEXT.md` inline) is `domain-modeling`.
+
+## Generated Codex distribution
+
+The rules above govern canonical authoring. The generated native Codex package omits Claude's `disable-model-invocation` frontmatter field to satisfy the bundled compatibility preflight. Each `agents/openai.yaml` is copied byte for byte, so user-only skills remain explicit-only and model-invoked skills remain automatic. Generated cross-skill calls read the installed sibling instructions and enforce those policies; see [the compatibility audit](codex-compatibility.md).

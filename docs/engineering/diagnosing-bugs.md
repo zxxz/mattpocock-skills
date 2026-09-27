@@ -6,6 +6,8 @@ It will not let the agent form a theory until a **tight** feedback loop exists: 
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:diagnosing-bugs`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 Type `/diagnosing-bugs`, or the agent reaches for it on its own when a task fits: it is model-invoked, and fires on "diagnose" / "debug this" or on a report that something is broken, throwing, failing, or slow.
 
 Reach for it on the hard ones: a bug that resists a first look, an intermittent flake, a regression that crept in between two known-good states. It is heavy by design, and the wrong tool for a question you want answered in one message.
@@ -54,6 +56,10 @@ The phases are gates, not a checklist. Each one refuses to open until something 
 Phase 5 has an escape hatch worth knowing about. The regression test is written before the fix, but only if a **correct seam** exists for it: one where the test exercises the real bug pattern as it occurs at the call site. Where the only available seam is too shallow, the skill is told to say so rather than write a test that gives false confidence. That absence is itself the finding, and it is what routes the post-mortem to `improve-codebase-architecture`.
 
 ## Common questions
+
+**Where does the human-in-the-loop helper run in Codex?**
+
+This fork's plugin copies the bundled template to your workspace before editing it. The helper needs Bash and a terminal where you can answer its prompts. If the session cannot share terminal input, it hands over the command. The plugin cache stays read-only, and secrets stay outside captured observations.
 
 **It fires on quick questions where I just wanted a direct answer.**
 This is the most-reported problem with the skill, and it is real. On GPT-5.6-Sol especially, users report it triggering on a plain description of a problem: "the model triggers the rather formal diagnosing-bugs skill instead. It then goes on to construct a reproduction scenario (often building a mock scenario with limited value) before giving me a response or suggestion. This results in considerable reply delays." Four separate people reported the same shape on [issue #578](https://github.com/mattpocock/skills/issues/578). The accepted fix is to start with a lighter approach and graduate to the heavier one only where the problem warrants it, but that change has not landed. The skill is calibrated against Claude Code's invocation behaviour; a [model](https://www.aihero.dev/ai-coding-dictionary/model) with a lower activation threshold over-fires it. Until it is graduated, the practical fix is to say what you want ("just answer this, don't diagnose") or to disable model invocation for it in your [harness](https://www.aihero.dev/ai-coding-dictionary/harness).

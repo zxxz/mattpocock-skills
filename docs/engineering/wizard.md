@@ -6,6 +6,8 @@ The [agent](https://www.aihero.dev/ai-coding-dictionary/agent) writes the script
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:wizard`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You can type `/wizard`, and the agent can also reach for it on its own. When it hits a step you have to take (a key it can't mint, a dashboard it can't click), it builds you a wizard instead of writing the instructions into the chat, where they scroll away.
 
 Reach for it when the next thing blocking you is a trip through a dashboard:
@@ -74,7 +76,7 @@ Nowhere in particular. It's a standalone, not a chain step. The common guess is 
 
 **Does it work outside Claude Code?**
 
-The artifact does, unconditionally: it's a plain bash script and it doesn't care what [harness](https://www.aihero.dev/ai-coding-dictionary/harness) generated it. The skill itself is model-invoked, so it's listed everywhere: type `/wizard` in Claude Code or `$wizard` in Codex, or just describe the setup you're stuck on. Being model-invoked also keeps it clear of [#693](https://github.com/mattpocock/skills/issues/693), where Claude's desktop and web surfaces drop *user-invoked* skills from the [model](https://www.aihero.dev/ai-coding-dictionary/model)'s listing and report them as not installed.
+The generated artifact needs Bash and a human-controlled terminal; GitHub writes also need an authenticated `gh` CLI. This fork's Codex plugin copies the bundled template into your workspace and hands over the command if the session cannot share terminal input. It does not provide credentials, install tools, or run the interactive wizard unattended. Select `$mattpocock-skills:wizard` explicitly, or describe the setup that is blocked on a human step so Codex can reach for it automatically.
 
 **Didn't this used to be user-invoked?**
 
