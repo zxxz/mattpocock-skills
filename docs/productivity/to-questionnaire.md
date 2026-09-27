@@ -6,6 +6,8 @@ It grills you about the **send**, never the subject. Interviewing you about the 
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:to-questionnaire`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/to-questionnaire`; the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) won't reach for it on its own.
 
 Reach for it when a decision is blocked on knowledge that lives in one other person's head: a client, a domain expert, an exec who owns the business rules, a colleague on a team you don't sit with. Which skill you want depends on where the answers actually are:

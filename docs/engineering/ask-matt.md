@@ -6,6 +6,8 @@ It recommends and stops. It does not grill, write a [spec](https://www.aihero.de
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:ask-matt`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/ask-matt`; the agent won't reach for it on its own.
 
 | Your situation | What the router gives back |
@@ -18,7 +20,7 @@ You invoke this by typing `/ask-matt`; the agent won't reach for it on its own.
 
 ## Prerequisites
 
-The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable, and it only knows the promoted skills in this repo.
+The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable, and it only knows the promoted skills in this repo. This fork's Codex package includes that whole promoted set. Skills in `in-progress/`, `misc/` and `deprecated/` require separate installation and are not part of its inventory.
 
 The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `implement`) assume [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) has already configured an issue tracker in the repo. The router will happily recommend them before that has happened.
 
@@ -45,6 +47,8 @@ The other idea it hands you is the **phase boundary**. A phase is a chunk of wor
 
 Two of those are routinely got wrong, which is why the router carries the order rather than the list. `/handoff` reads like the general bridge between windows and is not: portability is the whole of what it buys. `/compact` is the bottom of the tree rather than the first reach, because the four questions above it are each cheaper or more precise.
 
+In Codex these are human actions: use the client's new-chat control for the `/clear` case, and use `/compact` only when that client offers it. The agent cannot reset the conversation by running a shell command.
+
 ## Common questions
 
 **Isn't there just a list of the skills in the right order?**
@@ -53,7 +57,7 @@ People keep asking for one in the README. This skill is that list: it is what it
 
 **It told me half the skills aren't installed.**
 
-A known bug, unfixed. Most of the skills the router routes you through set `disable-model-invocation: true`, which means the harness leaves them out of the skill list it injects into the agent's context. The agent reads that list as exhaustive and reports them missing. One reported session had it declare the whole spec-and-tickets flow absent and reroute to bare `/grilling` and `/tdd`. Thirteen of the plugin's twenty-two skills carry the flag, so this is the common case rather than an edge. They are installed. Type the slash command anyway, or check `.claude-plugin/plugin.json`, which is the authority on what is present.
+User-only skills can be absent from implicit discovery while remaining installed. This fork's Codex router is instructed to check the packaged sibling skill directories instead of treating its initial context list as exhaustive. It may inspect a skill to explain a recommendation, but it cannot start a user-only workflow for you. Check the plugin's skill picker and explicitly select the namespaced entry if a recommendation seems missing.
 
 **It described a skill's behaviour, and the skill doesn't do that.**
 

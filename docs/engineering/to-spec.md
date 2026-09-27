@@ -6,6 +6,8 @@ It does not interview you. By the time you reach for it the deciding is already 
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:to-spec`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/to-spec`; the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) won't reach for it on its own.
 
 Reach for it when the build is too big for one agent [session](https://www.aihero.dev/ai-coding-dictionary/session) and has to survive being split across several. That is the whole trigger:

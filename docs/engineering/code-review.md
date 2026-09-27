@@ -6,6 +6,8 @@ The two axes are never merged and never re-ranked. The report ends with a worst 
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:code-review`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 Type `/code-review`, or the agent reaches for it automatically when you ask to review a branch, a PR, work in progress, or anything "since X".
 
 | Your situation | Reach for |
@@ -46,6 +48,10 @@ A generic review skill that does not know your standards is the thing this desig
 The **smell baseline** is the floor underneath it, twelve Fowler code smells from _Refactoring_ ch.3: Mysterious Name, Duplicated Code, Feature Envy, Data Clumps, Primitive Obsession, Repeated Switches, Shotgun Surgery, Divergent Change, Speculative Generality, Message Chains, Middle Man, Refused Bequest. Each is a labelled heuristic ("possible Feature Envy"), never a hard violation, and each is stated as *what it is* → *how to fix*, so a finding arrives with a move attached rather than a complaint. Anything your linter already enforces is skipped by both axes.
 
 ## Common questions
+
+**Does the Codex plugin provide the parallel reviewers?**
+
+It provides their instructions. The Codex session must supply subagent tools and enough available slots. If delegation is unavailable, the skill reports that limitation before the parallel-review step; it cannot claim two independent reviews from one inline pass.
 
 **It collides with Claude Code's own `/code-review`. What do I do?**
 

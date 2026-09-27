@@ -1,8 +1,8 @@
-# Ship the skill set as a native Claude Code plugin; defer a native Codex plugin
+# Ship native Claude and generated Codex plugins
 
 These skills have always been installable via [skills.sh](https://skills.sh/mattpocock/skills) (`npx skills add mattpocock/skills`), which copies editable skill files into a user's project across Claude Code, Codex, and other Agent-Skills-standard harnesses. A recurring request is a **plug-and-play** distribution: subscribe to the set as a read-only, always-current bundle you don't edit, rather than a fork you own. That is exactly what native plugin systems provide.
 
-We ship a native **Claude Code plugin** and, for now, **defer** a native **Codex plugin**. The split is forced by how each ecosystem's plugin manifest selects skills, against this repo's bucketed layout.
+The original decision shipped a native **Claude Code plugin** and deferred a native **Codex plugin**. The fork supersedes the deferral in the 2026-09-27 update below. The split is forced by how each ecosystem's plugin manifest selects skills, against this repo's bucketed layout.
 
 ## The constraint: bucketed skills vs. single-path selection
 
@@ -39,3 +39,13 @@ Verified 2026-08-05, on Claude Code 2.1.222, against the live listing:
 - `claude plugin details mattpocock-skills` then reports version 1.2.0 and loads the promoted skills.
 - The listing's `source` is `{"source": "url", "url": "https://github.com/mattpocock/skills.git", "sha": …}`: the **sha is pinned**, so a release reaches installed users when that pin moves, not the moment we tag. At the time of writing the pin sits two commits behind `main`, which is why it lists 22 skills rather than the 24 in `plugin.json`.
 - The in-session `/plugin install mattpocock-skills` was **not** exercised: `/plugin` is unavailable in headless (`claude -p`) sessions. It runs the same resolver as the CLI, and the documented example form is `/plugin install <name>@claude-plugins-official`.
+
+## Update, 2026-09-27: generated Codex distribution in this fork
+
+The `zxxz/mattpocock-skills` fork selects option (b), with a deterministic generator and CI enforcement so the flat copies never become a second authoring source. `plugins/mattpocock-skills/plugin.json` uses the portable Agent Plugins schema and immediate real skill directories. A generated `.codex-plugin/plugin.json` supports clients using the compatibility layout. No portable manifest sits above the bucketed authoring tree.
+
+The generator derives the promoted set from the Claude allowlist, cross-checks the two promoted buckets, copies every supporting resource, validates invocation policies, and applies the audited Codex adaptations. Canonical Claude sources remain intact. `scripts/list-skills.sh` and `scripts/link-skills.sh` inspect only canonical `skills/`; standalone consumers use upstream to avoid recursive discovery of generated copies.
+
+Codex package versions advance when installable content changes, including fork-only adaptations. A higher source package version also advances the version floor. Provenance records the canonical source version and digest; sync PRs separately record the actual upstream commit and version. The existing Changesets version command still synchronizes the Claude version and now also regenerates Codex. Repeated regeneration without source changes is a no-op.
+
+The fork's native catalog is `.agents/plugins/marketplace.json`. Installation and updates use the [canonical install block](../install-block.md); this does not imply an official OpenAI listing. [Sync automation](../codex-sync.md) merges upstream ancestry through a validated PR and requires a repository-scoped App credential for unattended CI. [Runtime acceptance](../codex-acceptance.md) records the tested client and limits separately from structural validation.

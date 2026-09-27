@@ -24,12 +24,33 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 
 ## Installation (30-second setup)
 
-Two ways in, two philosophies. **The [Claude Code plugin](https://code.claude.com/docs/en/plugins)** installs the whole set as a managed, read-only bundle that updates when I ship, so you subscribe rather than fork. **[skills.sh](https://skills.sh/mattpocock/skills)** copies editable skill files into your project, so you can hack on them and make them your own. Pick one: installing both leaves you with every skill twice.
+This fork adds a managed native Codex plugin to the upstream skills. Choose one installation route per agent: a managed plugin or editable standalone skills. Installing both, or two Matt Pocock plugins from different marketplaces, duplicates the skills.
 
 ### 1. Get the skills
 
 <details>
-<summary><strong>Claude Code</strong></summary>
+<summary><strong>Codex: this fork’s native plugin</strong></summary>
+
+```bash
+codex plugin marketplace add zxxz/mattpocock-skills --ref main
+codex plugin add mattpocock-skills@mattpocock-fork
+```
+
+Start a new chat after installation. Use `$mattpocock-skills:setup-matt-pocock-skills` once per project. The marketplace ships exactly the promoted engineering and productivity skills. It is a repository marketplace, not an official directory listing.
+
+To refresh an installed copy:
+
+```bash
+codex plugin marketplace upgrade mattpocock-fork
+codex plugin add mattpocock-skills@mattpocock-fork
+```
+
+Start a new chat after updating. Automated repository synchronization and local plugin refresh are separate steps.
+
+</details>
+
+<details>
+<summary><strong>Claude Code: upstream plugin</strong></summary>
 
 ```bash
 claude plugins install mattpocock-skills
@@ -41,39 +62,24 @@ Or, from inside a session:
 /plugin install mattpocock-skills
 ```
 
-It's in Claude Code's official marketplace, so there's nothing to add first, and updates arrive automatically.
+This installs the upstream plugin from Claude Code's official marketplace. Its updates follow that marketplace's pinned revision, independently of this fork.
 
 </details>
 
 <details>
-<summary><strong>Codex, and other agents</strong></summary>
+<summary><strong>Editable standalone skills: any agent</strong></summary>
 
 ```bash
 npx skills@latest add mattpocock/skills
 ```
 
-Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take, so make sure `setup-matt-pocock-skills` is one of them.**
-
-A native Codex plugin is on the roadmap (see [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)).
-
-</details>
-
-<details>
-<summary><strong>For tinkerers</strong></summary>
-
-Use the same installer, on any agent, including Claude Code:
-
-```bash
-npx skills@latest add mattpocock/skills
-```
-
-It writes the skills into your repo as ordinary files you own and can edit. Nothing updates behind your back; pull my latest changes when you want them with `npx skills update`.
+Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take: make sure `setup-matt-pocock-skills` is one of them.** This installs editable upstream sources, not this fork's generated Codex package.
 
 </details>
 
 ### 2. Run `/setup-matt-pocock-skills`
 
-In your agent, run it once per repo. It will:
+In Codex, invoke `$mattpocock-skills:setup-matt-pocock-skills`. In Claude Code, use `/setup-matt-pocock-skills`. Run it once per repo. It will:
 
 - Ask you which issue tracker you want to use (GitHub, Linear, or local files)
 - Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)
@@ -229,3 +235,7 @@ General workflow tools, not code-specific.
 
 - **[grilling](./skills/productivity/grilling/SKILL.md)**: Interview the user relentlessly about a plan, decision, or idea until every branch of the design tree is resolved. The reusable interview primitive behind `grill-me`, `grill-with-docs`, `triage`, `wayfinder` and `improve-codebase-architecture`.
 - **[writing-for-agents](./skills/productivity/writing-for-agents/SKILL.md)**: Writing documents for agents: skills, AGENTS.md/CLAUDE.md, and any doc an agent reaches by a pointer.
+
+## Maintaining the Codex fork
+
+The committed package is generated from the Claude manifest's promoted allowlist. Edit canonical `skills/` sources, then run `npm run generate:codex`. CI rejects package drift. The daily upstream sync merges upstream history, regenerates the package, and opens one checked update PR. See [automation setup](.agents/codex-sync.md), [compatibility and limitations](.agents/codex-compatibility.md), and [acceptance evidence](.agents/codex-acceptance.md).

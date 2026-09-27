@@ -8,6 +8,8 @@ Two filters keep the report from becoming generic cleanup advice. Every candidat
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:improve-codebase-architecture`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 You invoke this by typing `/improve-codebase-architecture`; the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) will not reach for it on its own.
 
 It sits outside the build loop: it is not a step in the main loop but something you run periodically to queue up more work to improve the codebase. The four situations it gets used in:
@@ -81,7 +83,7 @@ Rarely, and you should know that going in. The skill is built to output findings
 
 **Does it work in Codex or another harness?**
 
-Partially. The exploration step names Claude Code's `Agent` tool with `subagent_type=Explore` directly, so a [harness](https://www.aihero.dev/ai-coding-dictionary/harness) without that tool may skip the parallel exploration rather than substitute its own. The skill still runs; the scan is just less thorough. A harness-neutral rewrite has been proposed but is not merged.
+The current exploration step asks for a subagent without requiring Claude's Agent tool. This fork's Codex package uses the session's available delegation tools and reports a missing capability before the dependent step. It reads the packaged codebase-design, grilling and domain-modeling instructions directly when needed. The HTML report still needs browser support and network access to its Tailwind and Mermaid CDNs; the plugin does not supply those capabilities.
 
 **How do I actually implement deep modules in TypeScript?**
 

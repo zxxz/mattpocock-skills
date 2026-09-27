@@ -15,8 +15,33 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Require fork App credentials
+        if: github.repository == 'zxxz/mattpocock-skills'
+        env:
+          APP_CLIENT_ID: ${{ vars.CODEX_SYNC_APP_CLIENT_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.CODEX_SYNC_PRIVATE_KEY }}
+        run: |
+          if [[ -z "$APP_CLIENT_ID" || -z "$APP_PRIVATE_KEY" ]]; then
+            echo '::error::Set CODEX_SYNC_APP_CLIENT_ID and CODEX_SYNC_PRIVATE_KEY following .agents/codex-sync.md so release PR validation runs unattended.'
+            exit 1
+          fi
+
+      - name: Create fork release token
+        if: github.repository == 'zxxz/mattpocock-skills'
+        id: app
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.CODEX_SYNC_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CODEX_SYNC_PRIVATE_KEY }}
+          owner: zxxz
+          repositories: mattpocock-skills
+          permission-contents: write
+          permission-pull-requests: write
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app.outputs.token || secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -34,4 +59,4 @@ jobs:
           commit: "chore: version skills"
           title: "chore: version skills"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app.outputs.token || secrets.GITHUB_TOKEN }}

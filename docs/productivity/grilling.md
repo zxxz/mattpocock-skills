@@ -6,6 +6,8 @@ It does not ask one question at a time, and it does not ask everything at once. 
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:grilling`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 Type `/grilling`, or the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) reaches for it on its own when a task fits. It is the only [skill](https://www.aihero.dev/ai-coding-dictionary/skill) in the grilling family that is model-invoked, which is why you rarely type it: usually a skill you *did* type is running it for you.
 
 Typing `/grilling` directly gets you the plain interview and nothing else. Where you want something more than that:
@@ -41,6 +43,10 @@ This page covers the mechanism. The things people most often want are documented
 | What gets written to `CONTEXT.md`, what becomes an ADR | [grill-with-docs](https://aihero.dev/skills-grill-with-docs) |
 
 ## Common questions
+
+**What if Codex cannot delegate a fact-finding task?**
+
+The fork's generated skill checks the tools available in the session and reports a missing subagent capability before that step. The plugin supplies the interview instructions, not a delegation service. Your decisions still wait for your answers; missing tools do not let the agent answer on your behalf.
 
 **Can I go back to one question at a time?**
 Yes, and a large part of the audience does. Add this to your global `CLAUDE.md`:

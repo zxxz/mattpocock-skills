@@ -8,6 +8,8 @@ It was called `writing-great-skills` until v1.1. The rename tracks what it alway
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:writing-for-agents`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 Type `/writing-for-agents`, or the agent reaches for it on its own when you're creating or editing a skill, or modifying `AGENTS.md` or `CLAUDE.md`.
 
 Reach for it by hand for everything else an agent reads: your docs, specs and [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket), system and [AFK](https://www.aihero.dev/ai-coding-dictionary/afk) prompts. The test is one question: does an agent read this? And it does not matter how the document gets in front of it, whether a pointer names it, a human pastes it, or it simply sits in the repo. For working out what a codebase actually contains in the first place, use [grill-with-docs](https://aihero.dev/skills-grill-with-docs); this reference governs how a document reads, not what it knows.
@@ -30,6 +32,10 @@ Once you think in these two loads, most authoring decisions (split or don't, inl
 - **Pruning**: single source of truth, relevance, and the no-op test applied sentence by sentence, against **duplication**, **sediment** and **sprawl**.
 
 ## Common questions
+
+**How should I make a skill explicit-only in Codex?**
+
+Set `policy.allow_implicit_invocation: false` in `agents/openai.yaml`. Canonical sources shared with Claude also keep `disable-model-invocation: true` in `SKILL.md`; this fork's generated Codex package omits that Claude-only field and copies the YAML policy unchanged. Automatic skills keep the default policy. The policy controls invocation, so do not assume explicit-only skills disappear from every picker or metadata list.
 
 **Where did `/writing-great-skills` go?**
 It is this skill, renamed in v1.1. Practitioners were already pointing it at `AGENTS.md`, docs, specs, tickets and runtime prompts long before the name caught up; structure, leading words and pruning turn out to be the craft of any text an agent reads. There is no alias. Reinstall under the new name.

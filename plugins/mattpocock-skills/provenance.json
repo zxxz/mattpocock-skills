@@ -1,0 +1,139 @@
+{
+  "generatedBy": "scripts/generate-codex-plugin.mjs",
+  "pluginVersion": "1.2.6",
+  "contentSha256": "370baf164c8023ab6130e99f0d573d55ff107532a910b59e7da1df2100a1dc0d",
+  "source": {
+    "version": "1.2.3",
+    "sha256": "b2137a7590a3dc7a7fae62590a3d47a3c6d7ce98f2f048bfea418624d0d09710"
+  },
+  "upstream": {
+    "repository": "https://github.com/mattpocock/skills"
+  },
+  "skills": [
+    {
+      "name": "ask-matt",
+      "source": "./skills/engineering/ask-matt",
+      "userInvoked": true
+    },
+    {
+      "name": "code-review",
+      "source": "./skills/engineering/code-review",
+      "userInvoked": false
+    },
+    {
+      "name": "codebase-design",
+      "source": "./skills/engineering/codebase-design",
+      "userInvoked": false
+    },
+    {
+      "name": "diagnosing-bugs",
+      "source": "./skills/engineering/diagnosing-bugs",
+      "userInvoked": false
+    },
+    {
+      "name": "domain-modeling",
+      "source": "./skills/engineering/domain-modeling",
+      "userInvoked": false
+    },
+    {
+      "name": "grill-with-docs",
+      "source": "./skills/engineering/grill-with-docs",
+      "userInvoked": true
+    },
+    {
+      "name": "implement",
+      "source": "./skills/engineering/implement",
+      "userInvoked": true
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "source": "./skills/engineering/improve-codebase-architecture",
+      "userInvoked": true
+    },
+    {
+      "name": "prototype",
+      "source": "./skills/engineering/prototype",
+      "userInvoked": false
+    },
+    {
+      "name": "research",
+      "source": "./skills/engineering/research",
+      "userInvoked": false
+    },
+    {
+      "name": "resolving-merge-conflicts",
+      "source": "./skills/engineering/resolving-merge-conflicts",
+      "userInvoked": false
+    },
+    {
+      "name": "setup-matt-pocock-skills",
+      "source": "./skills/engineering/setup-matt-pocock-skills",
+      "userInvoked": true
+    },
+    {
+      "name": "tdd",
+      "source": "./skills/engineering/tdd",
+      "userInvoked": false
+    },
+    {
+      "name": "to-spec",
+      "source": "./skills/engineering/to-spec",
+      "userInvoked": true
+    },
+    {
+      "name": "to-tickets",
+      "source": "./skills/engineering/to-tickets",
+      "userInvoked": true
+    },
+    {
+      "name": "triage",
+      "source": "./skills/engineering/triage",
+      "userInvoked": true
+    },
+    {
+      "name": "wayfinder",
+      "source": "./skills/engineering/wayfinder",
+      "userInvoked": true
+    },
+    {
+      "name": "wizard",
+      "source": "./skills/engineering/wizard",
+      "userInvoked": false
+    },
+    {
+      "name": "grill-me",
+      "source": "./skills/productivity/grill-me",
+      "userInvoked": true
+    },
+    {
+      "name": "grilling",
+      "source": "./skills/productivity/grilling",
+      "userInvoked": false
+    },
+    {
+      "name": "handoff",
+      "source": "./skills/productivity/handoff",
+      "userInvoked": true
+    },
+    {
+      "name": "teach",
+      "source": "./skills/productivity/teach",
+      "userInvoked": true
+    },
+    {
+      "name": "to-questionnaire",
+      "source": "./skills/productivity/to-questionnaire",
+      "userInvoked": true
+    },
+    {
+      "name": "wait-what",
+      "source": "./skills/productivity/wait-what",
+      "userInvoked": true
+    },
+    {
+      "name": "writing-for-agents",
+      "source": "./skills/productivity/writing-for-agents",
+      "userInvoked": false
+    }
+  ]
+}

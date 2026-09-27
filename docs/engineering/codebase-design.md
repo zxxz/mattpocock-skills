@@ -6,6 +6,8 @@ It is a reference, not a process. There is no loop to run, no artifact it produc
 
 ## When to reach for it
 
+In this fork's Codex plugin, select `$mattpocock-skills:codebase-design`. The invocation mode described below is unchanged; `/skill-name` examples refer to Claude Code.
+
 Type `/codebase-design`, or the agent reaches for it automatically when a design task fits.
 
 Reach for it when you already know which code you're redesigning and you need to think about its shape: where the seam goes, how small the interface can get, whether an extraction is earning its keep. It is also what you reach for to settle an argument about what a word means.
@@ -69,7 +71,7 @@ It does now. For a long time it did not. The inline deep-module notes that used 
 
 **Does the design-it-twice pattern work outside Claude Code?**
 
-Not cleanly. `DESIGN-IT-TWICE.md` says "spawn 3+ sub-agents in parallel using the Agent tool", which is Claude Code's [tool](https://www.aihero.dev/ai-coding-dictionary/tool) by Claude Code's name. The repo ships metadata for other [harnesses](https://www.aihero.dev/ai-coding-dictionary/harness), including Codex, and those may expose nothing under that name, so the parallel-design phase is less portable than the skill's metadata suggests. Tracked in [issue #564](https://github.com/mattpocock/skills/issues/564), open.
+The current reference requests parallel subagents without naming Claude's Agent tool. This fork's Codex package tells the agent to use the delegation tools available in the session and respect its agent-slot limit. When no delegation capability is available, it reports the missing capability before the parallel-design step. The vocabulary remains usable on its own, but parallel review is only established on a surface where it has actually run.
 
 **Can I add my own concepts to the glossary, such as connascence, module secrets, [progressive disclosure](https://www.aihero.dev/ai-coding-dictionary/progressive-disclosure)?**
 

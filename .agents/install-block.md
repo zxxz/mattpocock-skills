@@ -1,10 +1,32 @@
 # The canonical install block
 
-One install story, one wording. `README.md`, `.changeset/*`, and every page under `docs/` must say **this** and nothing else. Change it here first, then propagate.
+Change installation wording here first, then copy the marked blocks verbatim into `README.md`. Pages under `docs/` have no install commands because their site template renders the install widget.
 
-`mattpocock-skills` is listed in **Claude Code's official marketplace** (configured name `claude-plugins-official`, source repo `anthropics/claude-plugins-official`), which every Claude Code install has out of the box. There is no marketplace to add first. Official Anthropic marketplaces have auto-update enabled by default ([discover-plugins](https://code.claude.com/docs/en/discover-plugins)), so "updates arrive automatically" is a true claim, not a hope.
+This is the `zxxz/mattpocock-skills` fork. Its native Codex package is distributed by this repository marketplace, not an official OpenAI directory listing. The upstream Claude plugin remains available through Claude Code's official marketplace; that listing does not distribute this fork's Codex package.
 
-## Claude Code: the plugin
+## Codex: managed plugin from this fork
+
+<canonical-block name="codex">
+
+```bash
+codex plugin marketplace add zxxz/mattpocock-skills --ref main
+codex plugin add mattpocock-skills@mattpocock-fork
+```
+
+Start a new chat after installation. Use `$mattpocock-skills:setup-matt-pocock-skills` once per project. The marketplace ships exactly the promoted engineering and productivity skills. It is a repository marketplace, not an official directory listing.
+
+To refresh an installed copy:
+
+```bash
+codex plugin marketplace upgrade mattpocock-fork
+codex plugin add mattpocock-skills@mattpocock-fork
+```
+
+Start a new chat after updating. Automated repository synchronization and local plugin refresh are separate steps.
+
+</canonical-block>
+
+## Claude Code: upstream plugin
 
 <canonical-block name="claude-code">
 
@@ -18,13 +40,11 @@ Or, from inside a session:
 /plugin install mattpocock-skills
 ```
 
-It's in Claude Code's official marketplace, so there's nothing to add first, and updates arrive automatically.
+This installs the upstream plugin from Claude Code's official marketplace. Its updates follow that marketplace's pinned revision, independently of this fork.
 
 </canonical-block>
 
-## Codex, and other agents: skills.sh
-
-The plugin is Claude Code only. Everywhere else, [skills.sh](https://skills.sh/mattpocock/skills) copies editable skill files into the project. Use the whole-set form on `README.md`:
+## Editable standalone skills
 
 <canonical-block name="skills-sh-whole-set">
 
@@ -32,11 +52,11 @@ The plugin is Claude Code only. Everywhere else, [skills.sh](https://skills.sh/m
 npx skills@latest add mattpocock/skills
 ```
 
-Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take: make sure `setup-matt-pocock-skills` is one of them.**
+Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take: make sure `setup-matt-pocock-skills` is one of them.** This installs editable upstream sources, not this fork's generated Codex package.
 
 </canonical-block>
 
-…and the single-skill form wherever one skill is named on its own. Note that **`docs/` pages are not a consumer of this block**: ai-hero renders the install widget above the body, so a page that writes the commands out duplicates it. See [writing-docs.md](./writing-docs.md).
+Use upstream for standalone installation: recursive third-party discovery of this fork can also find its generated package copies. Maintainer scripts list only canonical `skills/` sources. Do not use `scripts/link-skills.sh` as a consumer installer.
 
 <canonical-block name="skills-sh-one-skill">
 
@@ -50,12 +70,12 @@ npx skills@latest update <name>
 
 </canonical-block>
 
-`skills@latest` is the pinned spelling in all three. The pages under `docs/` used to carry their own copy of these commands; those blocks are now deleted rather than corrected, because the site renders the install commands itself.
+## Pick one route per agent
 
-## The two routes are exclusive
+Managed plugins and standalone skills are exclusive. Before switching, save any edits and remove or disable the old copy in that agent. Installing this fork beside an older Matt Pocock plugin from another marketplace also duplicates skills; choose one managed source. Do not remove unrelated skills or plugins.
 
-The plugin is a managed, read-only bundle you subscribe to. skills.sh writes files you own and edit. Installing both leaves the user with every skill twice: always say "pick one".
+## Maintainer notes
 
-## Not the install story
+`.claude-plugin/marketplace.json` is the upstream-compatible fallback for direct Claude installation. `.agents/plugins/marketplace.json` is this fork's native Codex catalog. The generated package lives in `plugins/mattpocock-skills/`; canonical authoring remains in bucket folders under `skills/`.
 
-`.claude-plugin/marketplace.json` makes the repo its own single-plugin marketplace (`/plugin marketplace add mattpocock/skills`, then `/plugin install mattpocock-skills@mattpocock`). The official listing supersedes it. It is kept as a fallback for installing the repo directly (an unreleased commit, or a fork), and is **not** documented to users.
+See [the packaging decision](adr/0002-ship-as-a-claude-code-plugin.md), [compatibility audit](codex-compatibility.md), and [sync setup](codex-sync.md).
