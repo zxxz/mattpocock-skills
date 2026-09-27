@@ -15,7 +15,7 @@ For human-authored PRs, run `npm run generate:codex` and commit the generated ch
 ## One-time repository setup
 
 1. Create a GitHub App owned by the fork owner, for example at [New GitHub App](https://github.com/settings/apps/new). Use a distinct name, the fork URL as its homepage, disable webhooks, and leave user authorization/callback features unused. Restrict installation to the owning account.
-2. Grant these repository permissions: **Contents: Read and write**, **Pull requests: Read and write**, and **Workflows: Read and write**. GitHub supplies metadata read permission. Workflows write is required because whole-upstream merges can change `.github/workflows/`. Do not grant administration, Actions, checks, organization, or account permissions.
+2. Grant these repository permissions: **Contents: Read and write**, **Pull requests: Read and write**, **Workflows: Read and write**, and **Administration: Read-only**. GitHub supplies metadata read permission. Workflows write is required because whole-upstream merges can change `.github/workflows/`. Administration read is required to verify strict branch protection before auto-merge; the live installation-token probe rejects that query without it. Do not grant administration write, Actions, checks, organization, or account permissions. The release job requests only contents and pull requests writes.
 3. Install the App on **only** `zxxz/mattpocock-skills`. Record its **Client ID**, generate one private key, and save these repository settings. Keep the key out of commits and chat:
 
    ```sh
