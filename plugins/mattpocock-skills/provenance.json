@@ -3,8 +3,8 @@
   "pluginVersion": "1.2.6",
   "contentSha256": "370baf164c8023ab6130e99f0d573d55ff107532a910b59e7da1df2100a1dc0d",
   "source": {
-    "version": "1.2.3",
-    "sha256": "b2137a7590a3dc7a7fae62590a3d47a3c6d7ce98f2f048bfea418624d0d09710"
+    "version": "1.2.4",
+    "sha256": "13602f54d6ac3375a4d05e75d321789d65a7be7c5a9da07778931fd69158cd8f"
   },
   "upstream": {
     "repository": "https://github.com/mattpocock/skills"
